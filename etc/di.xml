@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © MageSpecialist - Skeeller srl. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <preference for="MSP\NotifierQueueApi\Api\Data\QueueInterface" type="MSP\NotifierQueue\Model\Queue"/>
+    <preference for="MSP\NotifierQueueApi\Api\QueueRepositoryInterface"
+                type="MSP\NotifierQueue\Model\QueueRepository"/>
+    <preference for="MSP\NotifierQueue\Model\Queue\Command\GetInterface"
+                type="MSP\NotifierQueue\Model\Queue\Command\Get"/>
+    <preference for="MSP\NotifierQueue\Model\Queue\Command\SaveInterface"
+                type="MSP\NotifierQueue\Model\Queue\Command\Save"/>
+    <preference for="MSP\NotifierQueue\Model\Queue\Command\DeleteInterface"
+                type="MSP\NotifierQueue\Model\Queue\Command\Delete"/>
+    <preference for="MSP\NotifierQueue\Model\Queue\Command\GetListInterface"
+                type="MSP\NotifierQueue\Model\Queue\Command\GetList"/>
+    <preference for="MSP\NotifierQueue\Model\Queue\Command\GetByChannelIdInterface"
+                type="MSP\NotifierQueue\Model\Queue\Command\GetByChannelId"/>
+    <preference for="MSP\NotifierQueue\Model\Queue\Command\ClearInterface"
+                type="MSP\NotifierQueue\Model\Queue\Command\Clear"/>
+    <preference for="MSP\NotifierQueueApi\Api\QueueSearchResultsInterface"
+                type="MSP\NotifierQueue\Model\QueueSearchResults"/>
+
+    <preference for="MSP\NotifierQueueApi\Api\Data\ChannelExtInterface" type="MSP\NotifierQueue\Model\ChannelExt"/>
+    <preference for="MSP\NotifierQueueApi\Api\ChannelExtRepositoryInterface"
+                type="MSP\NotifierQueue\Model\ChannelExtRepository"/>
+    <preference for="MSP\NotifierQueueApi\Api\ChannelExtSearchResultsInterface"
+                type="MSP\NotifierQueue\Model\ChannelExtSearchResults"/>
+    <preference for="MSP\NotifierQueue\Model\ChannelExt\Command\GetInterface"
+                type="MSP\NotifierQueue\Model\ChannelExt\Command\Get"/>
+    <preference for="MSP\NotifierQueue\Model\ChannelExt\Command\SaveInterface"
+                type="MSP\NotifierQueue\Model\ChannelExt\Command\Save"/>
+    <preference for="MSP\NotifierQueue\Model\ChannelExt\Command\DeleteInterface"
+                type="MSP\NotifierQueue\Model\ChannelExt\Command\Delete"/>
+    <preference for="MSP\NotifierQueue\Model\ChannelExt\Command\GetListInterface"
+                type="MSP\NotifierQueue\Model\ChannelExt\Command\GetList"/>
+    <preference for="MSP\NotifierQueue\Model\ChannelExt\Command\GetByChannelIdInterface"
+                type="MSP\NotifierQueue\Model\ChannelExt\Command\GetByChannelId"/>
+
+    <preference for="MSP\NotifierQueue\Model\EnqueueMessageInterface" type="MSP\NotifierQueue\Model\EnqueueMessage"/>
+    <preference for="MSP\NotifierQueue\Model\SendQueuedMessageInterface"
+                type="MSP\NotifierQueue\Model\SendQueuedMessage"/>
+    <preference for="MSP\NotifierQueue\Model\SendQueueInterface" type="MSP\NotifierQueue\Model\SendQueue"/>
+
+    <type name="MSP\NotifierApi\Api\ChannelRepositoryInterface">
+        <plugin sortOrder="1" name="mSPNotifierQueueChannelRepositoryInterface"
+                type="MSP\NotifierQueue\Plugin\Api\ChannelRepositoryInterfacePlugin"/>
+    </type>
+    <type name="MSP\Notifier\Model\SendMessage">
+        <plugin sortOrder="1" name="mSPNotifierQueueSendMessage"
+                type="MSP\NotifierQueue\Plugin\Model\SendMessagePlugin"/>
+    </type>
+
+    <type name="ClearQueue">
+        <arguments>
+            <argument name="daysHistory" xsi:type="number">7</argument>
+        </arguments>
+    </type>
+
+    <type name="MSP\Notifier\Model\Channel\Validator\ChannelValidatorChain">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="queue_channel_ext"
+                      xsi:type="object">MSP\NotifierQueue\Model\Channel\Validator\ChannelExtValidator</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="msp_notifier_queue_send" xsi:type="object">MSP\NotifierQueue\Command\SendQueue</item>
+                <item name="msp_notifier_queue_clean" xsi:type="object">MSP\NotifierQueue\Command\CleanQueue</item>
+            </argument>
+        </arguments>
+    </type>
+</config>
