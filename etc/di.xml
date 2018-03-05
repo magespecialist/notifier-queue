@@ -21,8 +21,6 @@
                 type="MSP\NotifierQueue\Model\Queue\Command\GetList"/>
     <preference for="MSP\NotifierQueue\Model\Queue\Command\GetByChannelIdInterface"
                 type="MSP\NotifierQueue\Model\Queue\Command\GetByChannelId"/>
-    <preference for="MSP\NotifierQueue\Model\Queue\Command\ClearInterface"
-                type="MSP\NotifierQueue\Model\Queue\Command\Clear"/>
     <preference for="MSP\NotifierQueueApi\Api\QueueSearchResultsInterface"
                 type="MSP\NotifierQueue\Model\QueueSearchResults"/>
 
