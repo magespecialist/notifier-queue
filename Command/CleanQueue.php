@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MSP\NotifierQueue\Command;
 
+use Magento\Framework\ObjectManagerInterface;
 use MSP\NotifierQueueApi\Api\QueueRepositoryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -16,19 +17,19 @@ use Symfony\Component\Console\Output\OutputInterface;
 class CleanQueue extends Command
 {
     /**
-     * @var QueueRepositoryInterface
+     * @var ObjectManagerInterface
      */
-    private $queueRepository;
+    private $objectManager;
 
     /**
      * SendMessage constructor.
-     * @param QueueRepositoryInterface $queueRepository
+     * @param ObjectManagerInterface $objectManager
      */
     public function __construct(
-        QueueRepositoryInterface $queueRepository
+        ObjectManagerInterface $objectManager
     ) {
         parent::__construct();
-        $this->queueRepository = $queueRepository;
+        $this->objectManager = $objectManager;
     }
 
     /**
@@ -48,7 +49,13 @@ class CleanQueue extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->queueRepository->clear();
+        // @codingStandardsIgnoreStart
+        // Must use object manager here
+        /** @var QueueRepositoryInterface $queueRepository */
+        $queueRepository = $this->objectManager->get(QueueRepositoryInterface::class);
+        // @codingStandardsIgnoreEnd
+
+        $queueRepository->clear();
         $output->writeln("Queue cleaned from old messages");
     }
 }

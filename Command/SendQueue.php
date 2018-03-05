@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MSP\NotifierQueue\Command;
 
+use Magento\Framework\ObjectManagerInterface;
 use MSP\NotifierQueue\Model\SendQueueInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -16,19 +17,19 @@ use Symfony\Component\Console\Output\OutputInterface;
 class SendQueue extends Command
 {
     /**
-     * @var SendQueueInterface
+     * @var ObjectManagerInterface
      */
-    private $sendQueue;
+    private $objectManager;
 
     /**
      * SendMessage constructor.
-     * @param SendQueueInterface $cleanQueue
+     * @param ObjectManagerInterface $objectManager
      */
     public function __construct(
-        SendQueueInterface $cleanQueue
+        ObjectManagerInterface $objectManager
     ) {
         parent::__construct();
-        $this->sendQueue = $cleanQueue;
+        $this->objectManager = $objectManager;
     }
 
     /**
@@ -48,7 +49,13 @@ class SendQueue extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->sendQueue->execute();
+        // @codingStandardsIgnoreStart
+        // Must use object manager here
+        /** @var SendQueueInterface $sendQueue */
+        $sendQueue = $this->objectManager->get(SendQueueInterface::class);
+        // @codingStandardsIgnoreEnd
+
+        $sendQueue->execute();
         $output->writeln("Queue flushed");
     }
 }
