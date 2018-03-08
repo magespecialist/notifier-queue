@@ -58,7 +58,7 @@ class SendQueue implements SendQueueInterface
                 ->addFieldToFilter(QueueInterface::STATUS, QueueStatus::STATUS_PENDING);
 
             foreach ($collection as $message) {
-                $this->sendQueuedMessage->execute($message->getId());
+                $this->sendQueuedMessage->execute((int) $message->getId());
             }
         }
     }
