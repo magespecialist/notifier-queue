@@ -10,7 +10,7 @@
 
     <group id="default">
         <job name="msp_notifier_queue_send" instance="MSP\NotifierQueue\Model\SendQueueInterface" method="execute">
-            <schedule>* * * * */5</schedule>
+            <schedule>*/5 * * * *</schedule>
         </job>
 
         <job name="msp_notifier_queue_clean" instance="MSP\NotifierQueue\Model\CleanQueueInterface" method="execute">
